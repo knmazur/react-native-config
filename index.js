@@ -5,5 +5,8 @@
 // iOS: config vars set in xcconfig and exposed via ReactNativeConfig.m
 import { NativeModules } from 'react-native';
 
-export const Config = NativeModules.ReactNativeConfigModule || {}
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
+const module = isTurboModuleEnabled ? require('./codegen/NativeConfig').default : (NativeModules.ReactNativeConfigModule || {});
+const Config = isTurboModuleEnabled ? module.getTurboConstants() : module;
+
 export default Config;

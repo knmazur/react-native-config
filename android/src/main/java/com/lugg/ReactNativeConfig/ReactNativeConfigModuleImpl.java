@@ -1,40 +1,27 @@
 package com.lugg.ReactNativeConfig;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
 
-import java.lang.ClassNotFoundException;
-import java.lang.IllegalAccessException;
 import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
-public class ReactNativeConfigModule extends ReactContextBaseJavaModule {
-  public ReactNativeConfigModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-  }
+public class ReactNativeConfigModuleImpl {
+  public static final String NAME = "ReactNativeConfigModule";
 
-  @Override
-  public String getName() {
-    return "ReactNativeConfigModule";
-  }
-
-  @Override
-  public Map<String, Object> getConstants() {
+  public static Map<String, Object> getConstants(ReactApplicationContext context) {
     final Map<String, Object> constants = new HashMap<>();
 
     try {
-      Context context = getReactApplicationContext();
       int resId = context.getResources().getIdentifier("build_config_package", "string", context.getPackageName());
       String className;
       try {
         className = context.getString(resId);
       } catch (Resources.NotFoundException e) {
-        className = getReactApplicationContext().getApplicationContext().getPackageName();
+        className = context.getApplicationContext().getPackageName();
       }
       Class clazz = Class.forName(className + ".BuildConfig");
       Field[] fields = clazz.getDeclaredFields();
